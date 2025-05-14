@@ -21,7 +21,7 @@ jobs:
       - name: Build the app
         run: ./gradlew assembleRelease
       - name: Sign APK
-        uses: ilharp/sign-android-release@v1
+        uses: r0adkll/sign-android-release@v1
         id: sign_app
         with:
           releaseDir: app/build/outputs/apk/release
@@ -30,7 +30,7 @@ jobs:
           keyPassword: ${{ secrets.KEYPASS }}
           keyStorePassword: ${{ secrets.STOREPASS }}
           buildToolsVersion: 33.0.0
-      - uses: actions/upload-artifacts@v4
+      - uses: actions/upload-artifact@v2
         with:
-          name: release.apk
-          path: ${{ steps.sign_app.outputs.signedFile }}
+          name: Signed app bundle
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
