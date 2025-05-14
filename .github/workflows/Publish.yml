@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Build the app
+        run: ./gradlew assembleRelease
+      - name: Sign APK
+        uses: ilharp/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDir: app/build/outputs/apk/release
+          signingKey: ${{ secrets.SIGNING_KEY }}
+          keyAlias: ${{ secrets.ALIAS }}
+          keyPassword: ${{ secrets.KEYPASS }}
+          keyStorePassword: ${{ secrets.STOREPASS }}
+          buildToolsVersion: 33.0.0
+      - uses: actions/upload-artifacts@v3
+        with:
+          name: release.apk
+          path: ${{ steps.sign_app.outputs.signedFile }}
+      - uses: actions/upload-artifacts@v3
+        with:
+            name: mapping.txt
+            path: app/build/outputs/mapping/release/mapping.txt
