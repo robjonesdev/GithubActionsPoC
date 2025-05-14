@@ -30,11 +30,7 @@ jobs:
           keyPassword: ${{ secrets.KEYPASS }}
           keyStorePassword: ${{ secrets.STOREPASS }}
           buildToolsVersion: 33.0.0
-      - uses: actions/upload-artifacts@v3
+      - uses: actions/upload-artifacts@v4
         with:
           name: release.apk
           path: ${{ steps.sign_app.outputs.signedFile }}
-      - uses: actions/upload-artifacts@v3
-        with:
-            name: mapping.txt
-            path: app/build/outputs/mapping/release/mapping.txt
