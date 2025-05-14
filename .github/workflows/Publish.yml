@@ -35,4 +35,5 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyPassword: ${{ secrets.KEYPASS }}
           keyStorePassword: ${{ secrets.STOREPASS }}
-          buildToolsVersion: 33.0.0
+        env:
+          BUILD_TOOLS_VERSION: "33.0.0"
