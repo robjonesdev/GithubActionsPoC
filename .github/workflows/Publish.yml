@@ -18,6 +18,12 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          build-tools: '33.0.0'
+          platform-tools: true
+          tools: true
       - name: Build the app
         run: ./gradlew assembleRelease
       - name: Sign APK
@@ -29,3 +35,4 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyPassword: ${{ secrets.KEYPASS }}
           keyStorePassword: ${{ secrets.STOREPASS }}
+          buildToolsVersion: 33.0.0
