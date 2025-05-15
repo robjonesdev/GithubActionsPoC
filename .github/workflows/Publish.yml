@@ -36,8 +36,8 @@ jobs:
           releaseDir: app/build/outputs/apk/release
           signingKey: ${{ secrets.SIGNING_KEY }}
           keyAlias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEYPASS }}
-          keyPassword: ${{ secrets.STOREPASS }}
+          keyStorePassword: ${{ secrets.STOREPASS }}
+          keyPassword: ${{ secrets.KEYPASS }}
           buildToolsVersion: ${{ env.BUILD_TOOL_VERSION }}
       - name: Debug Signing Secrets
         run: |
