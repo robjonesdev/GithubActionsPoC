@@ -35,13 +35,21 @@ jobs:
           echo "Keystore Password: ${{ secrets.STOREPASS }}"
           echo "Key Password: ${{ secrets.KEYPASS }}"
           echo "Signing Key: ${{ secrets.SIGNING_KEY }}"
+      - name: Decode signing key
+        run: echo "$SIGNING_KEY" | base64 -d > app-release-key.jks
+      - name: Verify keystore
+        run: keytool -list -v -keystore app-release-key.jks -storepass $KEYSTORE_PASSWORD
+      - name: Align APK
+        run: |
+          /usr/local/lib/android/sdk/build-tools/${{ env.BUILD_TOOL_VERSION }}/zipalign -p -f -v 4 \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            app/build/outputs/apk/release/app-release-unsigned-temp.apk
       - name: Sign APK
-        uses: ilharp/sign-android-release@v2
-        id: sign_app
-        with:
-          releaseDir: app/build/outputs/apk/release
-          signingKey: ${{ secrets.SIGNING_KEY }}
-          keyAlias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEYPASS }}
-          keyPassword: ${{ secrets.STOREPASS }}
-          buildToolsVersion: ${{ env.BUILD_TOOL_VERSION }}
+        run: |
+          /usr/local/lib/android/sdk/build-tools/${{ env.BUILD_TOOL_VERSION }}/apksigner sign \
+          --ks app-release-key.jks \
+          --ks-key-alias: ${{ secrets.ALIAS }} \
+          --ks-pass pass: ${{ secrets.STOREPASS }} \
+          --key-pass pass: ${{ secrets.KEYPASS }} \
+          --out app/build/outputs/apk/release/app-release-unsigned-signed.apk \
+          - app/build/outputs/apk/release/app-release-unsigned-temp.apk
