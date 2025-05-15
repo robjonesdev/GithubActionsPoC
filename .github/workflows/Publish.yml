@@ -10,7 +10,7 @@ jobs:
       - name: Setup build tool version variable
         shell: bash
         run: |
-          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | sort -V | tail -n 1)
+          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
