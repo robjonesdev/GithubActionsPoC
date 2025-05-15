@@ -38,7 +38,7 @@ jobs:
       - name: Decode signing key
         run: echo "$SIGNING_KEY" | base64 -d > app-release-key.jks
       - name: Verify keystore
-        run: keytool -list -v -keystore app-release-key.jks -storepass $KEYSTORE_PASSWORD
+        run: keytool -list -v -keystore app-release-key.jks -storepass ${{ secrets.KEYPASS }}
       - name: Align APK
         run: |
           /usr/local/lib/android/sdk/build-tools/${{ env.BUILD_TOOL_VERSION }}/zipalign -p -f -v 4 \
