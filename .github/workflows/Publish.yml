@@ -13,8 +13,6 @@ jobs:
           BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | sort -V | tail -n 1)
           echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
-      - name: Debug Build Tools Version
-        run: echo "::Build Tools Version: ${{ env.BUILD_TOOL_VERSION }}"
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
