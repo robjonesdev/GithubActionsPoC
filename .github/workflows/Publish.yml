@@ -29,6 +29,12 @@ jobs:
         run: ./gradlew assembleRelease
       - name: Debug APK Directory
         run: ls -R app/build/outputs/apk/release
+      - name: Debug Signing Secrets
+        run: |
+          echo "Alias: ${{ secrets.ALIAS }}"
+          echo "Keystore Password: ${{ secrets.STOREPASS }}"
+          echo "Key Password: ${{ secrets.KEYPASS }}"
+          echo "Signing Key: ${{ secrets.SIGNING_KEY }}"
       - name: Sign APK
         uses: ilharp/sign-android-release@v2
         id: sign_app
@@ -39,8 +45,3 @@ jobs:
           keyStorePassword: ${{ secrets.KEYPASS }}
           keyPassword: ${{ secrets.STOREPASS }}
           buildToolsVersion: ${{ env.BUILD_TOOL_VERSION }}
-      - name: Debug Signing Secrets
-        run: |
-          echo "Alias: ${{ secrets.ALIAS }}"
-          echo "Keystore Password: ${{ secrets.STOREPASS }}"
-          echo "Key Password: ${{ secrets.KEYPASS }}"
