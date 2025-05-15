@@ -30,16 +30,15 @@ jobs:
       - name: Debug APK Directory
         run: ls -R app/build/outputs/apk/release
       - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
+        uses: ilharp/sign-android-release@v2
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyPassword: ${{ secrets.KEYPASS }}
-          keyStorePassword: ${{ secrets.STOREPASS }}
-        env:
-          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+          releaseDir: app/build/outputs/apk/release
+          signingKey: ${{ secrets.SIGNING_KEY }}
+          keyAlias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEYPASS }}
+          keyPassword: ${{ secrets.STOREPASS }}
+          buildToolsVersion: ${{ env.BUILD_TOOL_VERSION }}
       - name: Debug Signing Secrets
         run: |
           echo "Alias: ${{ secrets.ALIAS }}"
