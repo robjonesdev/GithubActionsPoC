@@ -40,8 +40,14 @@ jobs:
       # Set up Gradle for executing gradle commands. While technically unnecessary, this allows for gradle caching to speed up subsequent workflows
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+      # Validate the checksums of the gradle wrapper jar, ensuring no malicious actor has injected code into it
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      # Build the release artifacts via a gradle command, stacktrace is enabled here for verbose output
+      # and daemon spinup is disabled as we do not need the daemon running long term when spinning up new workspace
+      # runners with every run
       - name: Build the app
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --stacktrace --no-daemon
       # Sign the previously assemble application release variant with a signing key kept in secrets in base64 encoded notation
       - name: Sign app APK
         uses: r0adkll/sign-android-release@v1
@@ -61,5 +67,6 @@ jobs:
         with:
           name: SignedApk
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          retention-days: 3
       - name: Report Completion Status
         run: echo "Job complete, status is ${{ job.status }}."
