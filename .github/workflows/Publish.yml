@@ -36,5 +36,5 @@ jobs:
       - name: Upload Signed APK to Github Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Signed app bundle
+          name: SignedApk
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
