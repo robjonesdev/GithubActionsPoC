@@ -22,6 +22,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      # Set up Gradle for executing gradle commands. While technically unnecessary, this allows for gradle caching to speed up subsequent workflows
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       # Run a gradle command to execute unit tests under the debug variant
       - name: Run Unit tests
         run: ./gradlew testDebugUnitTest
