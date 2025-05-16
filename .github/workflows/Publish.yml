@@ -1,31 +1,46 @@
 name: Publish
 
 on:
+  # workflow_run makes this workflow depend on another workflows execution and completion
   workflow_run:
+    # This specifies the specific workflow or workflows to depend upon
     workflows: ["CI"]
     types:
+      # This specifies to only execute once the workflows above are complete
       - completed
 
 jobs:
   build:
     runs-on: [ubuntu-latest]
+    # Only execute this job in the event that those jobs specified under "workflow_run" were successful.
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    
+
     steps:
+      - run: echo "Publish pipeline triggered by ${{ github.event_name }} event"
+      - run: echo "Running on ${{ runner.os }} server"
+      - run: echo "Executing on branch ${{ github.ref }} and repository ${{ github.repository }}"
+      # This step is necessary to overcome a bug on the ubuntu runner, it gets the most up to date
+      # build tools version available for android that exists within the runner workspace, and exposes
+      # it as an environment variable.
       - name: Setup build tool version variable
         shell: bash
         run: |
           BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
           echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
-      - uses: actions/checkout@v3
-      - name: set up JDK
+      # This allows github to access the project in the workspace that it creates
+      - name: Check Out Project Files
+        uses: actions/checkout@v3
+      # This installs a java version in the project workspace created by Github during this action
+      - name: Set Up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 17
+      # Execute a gradle command to assemble a release variant of the application
       - name: Build the app
         run: ./gradlew assembleRelease
+      # Sign the previously assemble application release variant with a signing key kept in secrets in base64 encoded notation
       - name: Sign app APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
@@ -37,8 +52,12 @@ jobs:
           keyPassword: ${{ secrets.KEYPASS }}
         env:
           BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+      # Upload the signed application to the workflow artifacts available for this workflow
+      # artifacts uploaded in this manner can be downloaded from the workflow run page in the github repository UI
       - name: Upload Signed APK to Github Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: SignedApk
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
+      - name: Report Completion Status
+        run: echo "Job complete, status is ${{ job.status }}."

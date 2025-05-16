@@ -1,17 +1,29 @@
 name: CI
 
 on:
+  # This line allows a user to manually kick off this job from workflows
   workflow_dispatch:
+  pull_request:
+    branches: [ "main", "develop" ]
 
 jobs:
   unit_tests:
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v3
-      - name: set up JDK
+      - run: echo "CI pipeline triggered by ${{ github.event_name }} event"
+      - run: echo "Running on ${{ runner.os }} server"
+      - run: echo "Executing on branch ${{ github.ref }} and repository ${{ github.repository }}"
+      # This allows github to access the project in the workspace that it creates
+      - name: Check Out Project Files
+        uses: actions/checkout@v3
+      # This installs a java version in the project workspace created by Github during this action
+      - name: Set Up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 17
-      - name: Unit tests
+      # Run a gradle command to execute unit tests under the debug variant
+      - name: Run Unit tests
         run: ./gradlew testDebugUnitTest
+      - name: Report Completion Status
+        run: echo "Job complete, status is ${{ job.status }}."
