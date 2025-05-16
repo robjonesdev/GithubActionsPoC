@@ -7,7 +7,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  build:
+  unit_tests:
     runs-on: [ubuntu-latest]
     steps:
       - run: echo "CI pipeline triggered by ${{ github.event_name }} event"
@@ -22,12 +22,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-  unit_test:
-    needs: build
-    runs-on: [ubuntu-latest]
-    steps:
-    # Run a gradle command to execute unit tests under the debug variant
-    - name: Run Unit tests
-      run: ./gradlew testDebugUnitTest
-    - name: Report Completion Status
-      run: echo "Job complete, status is ${{ job.status }}."
+      # Run a gradle command to execute unit tests under the debug variant
+      - name: Run Unit tests
+        run: ./gradlew testDebugUnitTest
+      - name: Report Completion Status
+        run: echo "Job complete, status is ${{ job.status }}."

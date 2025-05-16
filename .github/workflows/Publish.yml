@@ -10,7 +10,7 @@ on:
       - completed
 
 jobs:
-  build sign and publish:
+  build:
     runs-on: [ubuntu-latest]
     # Only execute this job in the event that those jobs specified under "workflow_run" were successful.
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
