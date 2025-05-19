@@ -55,6 +55,6 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          file: ../../app/build/sdkDependencies.txt
+          file: ../../app/build/outputs/sdk-dependencies/release/sdkDependencies.txt
           output-file: sbom-android.json
           format: cyclonedx-json
