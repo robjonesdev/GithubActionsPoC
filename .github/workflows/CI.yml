@@ -50,9 +50,11 @@ jobs:
       # insights tab of the Github repository for SBOM generation
       - name: Build dependencies
         run: ./gradlew dependencies
+      - name: Build Gradle
+        run: ./gradlew build
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ../../
+          path: ./
           output-file: sbom-android.json
           format: cyclonedx-json
