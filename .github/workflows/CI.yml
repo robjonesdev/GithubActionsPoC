@@ -41,10 +41,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: 'Checkout Repository'
+      - name: Checkout Project Files
         uses: actions/checkout@v3
-      - name: Run snapshot action
-        uses: mikepenz/gradle-dependency-submission@v1
+      # Validate the checksums of the gradle wrapper jar, ensuring no malicious actor has injected code into it
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      # Run a snapshot of the dependencies within the application and submit those dependencies to the
+      # insights tab of the Github repository for SBOM generation
+      - name: Build dependencies
+        run: ./gradlew dependencies
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
         with:
-          gradle-project-path: ""
-          gradle-build-module: ":app"
+          path: .
+          output: sbom-android.json
+          format: cyclonedx-json
