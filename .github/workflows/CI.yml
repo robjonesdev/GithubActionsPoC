@@ -52,13 +52,8 @@ jobs:
         run: ./gradlew app:dependencies
       - name: Print Directory Structure After Building Dependencies
         run: |
-         echo "Current working directory after building dependencies:"
-         pwd
-         echo "Directory contents after building dependencies:"
-         ls -al
-         each "Changing directories to top level"
-         cd ../../
-         ls -al
+         cd ../..
+         ls - al
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
