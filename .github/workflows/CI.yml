@@ -52,11 +52,11 @@ jobs:
         run: ./gradlew app:dependencies
       - name: Print Directory Structure After Building Dependencies
         run: |
-         cd ../
+         cd ../GithubActionsPoC
          ls -al
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ../app/build
+          path: ../GithubActionsPoC/app/build
           output-file: sbom-android.json
           format: cyclonedx-json
