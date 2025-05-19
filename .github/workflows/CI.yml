@@ -55,6 +55,6 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ../../app/build
+          path: ../../app/build/.
           output-file: sbom-android.json
           format: cyclonedx-json
