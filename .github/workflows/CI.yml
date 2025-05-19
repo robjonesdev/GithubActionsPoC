@@ -48,13 +48,11 @@ jobs:
         uses: gradle/actions/wrapper-validation@v4
       # Run a snapshot of the dependencies within the application and submit those dependencies to the
       # insights tab of the Github repository for SBOM generation
-      - name: Build Gradle
-        run: ./gradlew app:build
       - name: Build dependencies
         run: ./gradlew app:dependencies
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ../../app/build/.
+          path: ./app/build/
           output-file: sbom-android.json
           format: cyclonedx-json
