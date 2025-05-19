@@ -53,7 +53,7 @@ jobs:
       - name: Print Directory Structure After Building Dependencies
         run: |
          cd ../..
-         ls - al
+         ls -al
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
